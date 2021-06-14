@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mozilla_django_oidc',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +126,23 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTHENTICATION_BACKENDS = (
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+)
+
+# OpenID Connect authentication
+# See https://mozilla-django-oidc.readthedocs.io/en/stable/installation.html#add-routing-to-urls-py
+OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
+OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
+OIDC_RP_SIGN_ALGO = 'RS256'
+
+OIDC_API_BASE_URL = 'https://dev-4679325.okta.com/oauth2/default/v1'
+OIDC_OP_AUTHORIZATION_ENDPOINT = OIDC_API_BASE_URL + '/authorize'
+OIDC_OP_TOKEN_ENDPOINT = OIDC_API_BASE_URL + '/token'
+OIDC_OP_USER_ENDPOINT = OIDC_API_BASE_URL + '/userinfo'
+OIDC_OP_JWKS_ENDPOINT = OIDC_API_BASE_URL + '/keys'
+LOGIN_URL = 'oidc_authentication_init'
+LOGIN_REDIRECT_URL = '/polls/'
+LOGOUT_REDIRECT_URL = '/polls/'
