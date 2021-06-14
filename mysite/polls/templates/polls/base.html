@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>{% block title %}My amazing site{% endblock %}</title>
+</head>
+
+<body>
+    <div id="navbar">
+        {% block sidebar %}
+        {% if user.is_authenticated %}
+          <p>Current user: {{ user.email }}</p>
+          <form action="{% url 'oidc_logout' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="logout">
+          </form>
+        {% else %}
+          <a href="{% url 'oidc_authentication_init' %}">Login</a>
+        {% endif %}
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
